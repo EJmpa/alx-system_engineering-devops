@@ -19,7 +19,8 @@ FILE="school"
 if [ -e "$FILE" ]
 then
 	echo "school file exists"
-	if [ -s "$FILE" ]; then
+	if [ -s "$FILE" ]
+	then
 		echo "school file is not empty"
 	else
 		echo "school file is empty"
