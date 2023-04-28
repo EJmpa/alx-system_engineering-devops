@@ -8,7 +8,7 @@ do
     echo "Best School"
     if [ $i -eq 10 ]
     then
-        echo Hi\nBest School
+        echo "Hi\nBest School"
     fi
     ((i++))
 done
