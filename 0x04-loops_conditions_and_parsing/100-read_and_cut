@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # help: read
 
-# Write a Bash script that displays the content of the file /etc/passwd.
+# Write a Bash script that displays the content of the file `/etc/passwd`.
 
 # Your script should only display:
 # username, user id, and Home directory path for the user
