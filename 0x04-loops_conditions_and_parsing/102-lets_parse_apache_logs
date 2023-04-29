@@ -8,4 +8,4 @@
 # You must use awk
 # You are not allowed to use while, for, until and cut
 
-awk '{print $1,$9}' /var/log/apache2/apache-access.log
+awk '{print $1,$9}' apache-access.log
