@@ -1,0 +1,14 @@
+#!/usr/bin/env bash
+# Bash script that displays: "To infinity and beyond indefinitely"
+With a sleep 2 in between each iteration "I am invincible!!!" when receiving a SIGTERM signal
+
+trap 'echo "I am invincible!!!"; exit' SIGTERM
+
+while true; do
+    echo "To infinity and beyond"
+    sleep 2
+done
+
+# This script uses the `trap` command to specify a command to be executed when the script receives
+# a SIGTERM signal. In this case, the command is echo "I am invincible!!!"; exit,
+# which displays the phrase “I am invincible!!!” and then exits the script.
