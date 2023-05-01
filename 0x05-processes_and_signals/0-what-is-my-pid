@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+# A Bash script that displays its own PID.
+# The `$$` variable in Bash contains the PID (process ID) of the script itself.
+
+echo $$
