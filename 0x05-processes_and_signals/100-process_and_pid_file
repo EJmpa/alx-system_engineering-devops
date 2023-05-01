@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+# Create the file /var/run/myscript.pid containing the script's PID
+echo $$ > /var/run/myscript.pid
+
+# Define a function to handle signals
+handle_signal() {
+    signal=$1
+    case $signal in
+        SIGTERM)
+            echo "I hate the kill command"
+            ;;
+        SIGINT)
+            echo "Y U no love me?!"
+            ;;
+        SIGQUIT)
+            rm -rf /var/run/myscript.pid; exit
+    esac
+}
+
+# Set up signal handlers
+trap 'handle_signal SIGTERM' SIGTERM
+trap 'handle_signal SIGINT' SIGINT
+trap 'handle_signal SIGQUIT' SIGQUIT
+
+# Display "To infinity and beyond" indefinitely
+while true; do
+    echo "To infinity and beyond"
+    sleep 2
+done
