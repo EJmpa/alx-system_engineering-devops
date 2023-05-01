@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 # A Bash (init) script `101-manage_my_process` that manages `manage_my_proces`
 
+#!/usr/bin/env bash
+# Manages 'manage_my_process'
+
 case "$1" in
     start)
         ./manage_my_process &
