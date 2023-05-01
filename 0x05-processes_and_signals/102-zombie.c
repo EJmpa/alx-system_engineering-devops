@@ -28,7 +28,7 @@ int main(void)
 }
 
 /**
- * infinite_while - Infinite loop 
+ * infinite_while - Infinite loop
  *
  * Return: Always 0
  */
