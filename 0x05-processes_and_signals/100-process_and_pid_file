@@ -12,18 +12,18 @@ handle_signal() {
         SIGINT)
             echo "Y U no love me?!"
             ;;
-        SIGQUIT)
-            rm -rf /var/run/myscript.pid; exit
     esac
+    # Delete the file /var/run/myscript.pid and terminate the script
+    rm /var/run/myscript.pid
+    exit
 }
 
 # Set up signal handlers
 trap 'handle_signal SIGTERM' SIGTERM
 trap 'handle_signal SIGINT' SIGINT
-trap 'handle_signal SIGQUIT' SIGQUIT
 
 # Display "To infinity and beyond" indefinitely
 while true; do
     echo "To infinity and beyond"
-    sleep 2
+    sleep 1
 done
