@@ -22,3 +22,7 @@ case "$1" in
     *)
         echo "Usage: manage_my_process {start|stop|restart}"
 esac
+
+# This script takes one argument: start, stop, or restart.
+# Depending on the argument passed, it will start, stop, or restart the manage_my_process process
+# and create or delete the /var/run/my_process.pid file as needed. It also displays the appropriate message for each action.
