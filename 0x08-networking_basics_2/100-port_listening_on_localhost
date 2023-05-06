@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+# This Bash script makes localhost listen on port 98
+
+nc -l 127.0.0.1 98
+
+# This script uses the `nc` command with the -l flag to listen on the specified IP address (127.0.0.1, which is the loopback address for localhost)
+# and port (98). Any incoming data on this port will be displayed in the terminal.
