@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+# This script displays all acive IPv4 addresses on the machine.
+
+hostname -I | awk '{print $1}'
+
+# This script uses the `hostname` command with the (-I) flag to display all active IPv4 addresses on the machine.
+# The output is then piped to the `awk` command, which prints only the first field (i.e., the first IP address).
