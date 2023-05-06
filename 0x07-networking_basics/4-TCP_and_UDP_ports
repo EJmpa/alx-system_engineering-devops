@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+# A Bash script that displays listening sockets with the PID and name of the program to which each socket belongs
+
+sudo netstat -tunlp
+
+# This script uses the `netstat` command with the "-tunlp" flags to display listening sockets (-l),
+# show both TCP (-t) and UDP (-u) sockets, display numeric addresses (-n), and show the PID and name of the
+# program to which each socket belongs (-p). The `sudo` command is used to run netstat with root privileges,
+# which is necessary to display the PID and name of the program.
