@@ -3,8 +3,7 @@
 # **** localhost resolves to 127.0.0.2
 # **** facebook.com resolves to 8.8.8.8
 
-echo "127.0.0.2 localhost" | sudo tee -a /etc/hosts
-echo "8.8.8.8 facebook.com" | sudo tee -a /etc/hosts
-
-# This script uses the `echo` command to output the desired mappings and the `tee` command with the -a flag to append them to
-# the /etc/hosts file. The sudo command is used to run tee with root privileges, which is necessary to modify the /etc/hosts file.
+cp /etc/hosts ~/hosts.new
+echo "127.0.0.2		localhost" > ~/hosts.new
+echo "8.8.8.8		facebook.com" >> ~/hosts.new
+cp -f ~/hosts.new /etc/hosts
