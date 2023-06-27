@@ -11,5 +11,5 @@ ufw allow 'Nginx HTTP'
 # Create index.html file with "Hello World!" content
 echo "Hello World!" > /var/www/html/index.html
 
-# Restart nginx without using systemctl
-service nginx restart
+# Start nginx without using systemctl
+service nginx start
