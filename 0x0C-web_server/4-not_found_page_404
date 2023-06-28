@@ -1,0 +1,31 @@
+#!/usr/bin/env bash
+# Update package lists
+apt-get update
+
+# Install Nginx
+apt-get install -y nginx
+
+# Configure Nginx to listen on port 80 and set up custom 404 page
+echo 'Hello World!' > /var/www/html/index.nginx-debian.html
+echo "
+server {
+    listen 80 default_server;
+    listen [::]:80 default_server;
+    root /var/www/html;
+    index index.html;
+    location / {
+        try_files \$uri \$uri/ =404;
+    }
+    error_page 404 /404.html;
+    location = /404.html {
+        internal;
+        return 404 'Ceci n\'est pas une page';
+    }
+}
+" > /etc/nginx/sites-available/default
+
+# Create the custom 404 page
+echo "Ceci n'est pas une page" > /var/www/html/404.html
+
+# Restart Nginx
+service nginx restart
