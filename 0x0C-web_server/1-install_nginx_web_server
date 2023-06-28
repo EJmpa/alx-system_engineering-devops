@@ -5,7 +5,7 @@ sudo apt-get update -y
 sudo apt-get install -y nginx
 
 # configure Nginx
-ufw allow 'Nginx HTTP'
+sudo ufw allow 'Nginx HTTP'
 sudo sed -i 's/80 default_server/80/' /etc/nginx/sites-available/default
 sudo service nginx restart
 
