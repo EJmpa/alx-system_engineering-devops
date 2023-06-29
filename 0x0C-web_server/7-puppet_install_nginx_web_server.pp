@@ -1,45 +1,25 @@
-# Install Nginx package
-package { 'nginx':
-  ensure => installed,
+# Script to install nginx using puppet
+
+package {'nginx':
+  ensure => 'present',
 }
 
-# Configure Nginx
-file { '/etc/nginx/sites-available/default':
-  ensure  => file,
-  content => '
-    server {
-      listen 80 default_server;
-      listen [::]:80 default_server;
-      root /var/www/html;
-      index index.html;
-      location / {
-        echo "Hello World!";
-      }
-      location /redirect_me {
-        return 301 https://www.example.com/;
-      }
-    }
-  ',
-  notify  => Service['nginx'],
+exec {'install':
+  command  => 'sudo apt-get update ; sudo apt-get -y install nginx',
+  provider => shell,
+
 }
 
-# Remove default Nginx configuration
-file { '/etc/nginx/sites-enabled/default':
-  ensure => absent,
+exec {'Hello':
+  command  => 'echo "Hello World!" | sudo tee /var/www/html/index.nginx-debian.html',
+  provider => shell,
 }
 
-# Enable Nginx default site
-file { '/etc/nginx/sites-enabled/default':
-  ensure  => link,
-  target  => '/etc/nginx/sites-available/default',
-  require => File['/etc/nginx/sites-available/default'],
-  notify  => Service['nginx'],
+exec {'sudo sed -i "s/listen 80 default_server;/listen 80 default_server;\\n\\tlocation \/redirect_me {\\n\\t\\treturn 301 https:\/\/blog.ehoneahobed.com\/;\\n\\t}/" /etc/nginx/sites-available/default':
+  provider => shell,
 }
 
-# Restart Nginx service
-service { 'nginx':
-  ensure    => running,
-  enable    => true,
-  hasstatus => true,
-  require   => Package['nginx'],
+exec {'run':
+  command  => 'sudo service nginx restart',
+  provider => shell,
 }
