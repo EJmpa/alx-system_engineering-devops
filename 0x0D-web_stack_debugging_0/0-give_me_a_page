@@ -1,4 +1,2 @@
 #!/usr/bin/env bash
-# Script to fix Apache and make it return a page containing "Hello Holberton"
-
 sudo service apache2 start
