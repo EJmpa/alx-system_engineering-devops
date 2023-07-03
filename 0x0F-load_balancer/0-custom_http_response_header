@@ -41,10 +41,7 @@ server {
 }"
 
 # Write the server configuration to the default Nginx configuration file
-echo "$server_config" | sudo tee /etc/nginx/sites-available/default
-
-# Create a symbolic link to enable the server configuration
-sudo ln -s /etc/nginx/sites-available/default /etc/nginx/sites-enabled/default
+echo "$server_config" > /etc/nginx/sites-enabled/default
 
 # Restart Nginx to apply the changes
 sudo service nginx restart
