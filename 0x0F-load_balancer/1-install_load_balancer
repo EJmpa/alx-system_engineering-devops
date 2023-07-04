@@ -1,0 +1,33 @@
+#!/usr/bin/env bash
+# Install HAProxy
+sudo apt-get update
+sudo apt-get install -y haproxy
+
+# Configure HAProxy
+sudo mv /etc/haproxy/haproxy.cfg /etc/haproxy/haproxy.cfg.bak
+sudo tee /etc/haproxy/haproxy.cfg > /dev/null << EOL
+global
+    daemon
+    maxconn 256
+
+defaults
+    mode http
+    timeout connect 5000ms
+    timeout client 50000ms
+    timeout server 50000ms
+
+frontend http-in
+    bind *:80
+    default_backend servers
+
+backend servers
+    balance roundrobin
+    server 212133-web-01 100.25.133.51:80 check
+    server 212133-web-02 3.83.227.219:80 check
+EOL
+
+# Enable HAProxy service to be managed via init script
+sudo sed -i 's/ENABLED=0/ENABLED=1/' /etc/default/haproxy
+
+# Restart HAProxy service
+sudo service haproxy restart
