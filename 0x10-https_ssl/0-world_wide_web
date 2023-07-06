@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+# This script displays information about subdomains of a domain
+
+# Check if both domain and subdomain arguments are provided
+if [[ -z $1 ]]; then
+  echo "Error: Domain argument is missing."
+  exit 1
+fi
+
+# Function to retrieve DNS record information
+get_dns_record() {
+  local domain=$1
+  local subdomain=$2
+  dig_output=$(dig "$subdomain.$domain" | awk '/ANSWER SECTION/ { getline; print }')
+  record_type=$(echo "$dig_output" | awk '{ print $4 }')
+  destination=$(echo "$dig_output" | awk '{ print $5 }')
+  echo "The subdomain $subdomain is a $record_type record and points to $destination"
+}
+
+# Check if subdomain argument is provided
+if [[ -n $2 ]]; then
+  get_dns_record "$1" "$2"
+else
+  default_subdomains=("www" "lb-01" "web-01" "web-02")
+  for subdomain in "${default_subdomains[@]}"; do
+    get_dns_record "$1" "$subdomain"
+  done
+fi
