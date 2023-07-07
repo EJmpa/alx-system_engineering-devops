@@ -1,9 +1,10 @@
 global
-    log /dev/log local0
+11;rgb:0000/0000/0000log /dev/log local0
     log /dev/log local1 notice
     chroot /var/lib/haproxy
     stats socket /run/haproxy/admin.sock mode 660 level admin
     stats timeout 30s
+    maxconn 4096
     user haproxy
     group haproxy
     daemon
@@ -33,19 +34,16 @@ defaults
     errorfile 503 /etc/haproxy/errors/503.http
     errorfile 504 /etc/haproxy/errors/504.http
 
-frontend www-http
+frontend stats
     bind *:80
     mode http
     http-request set-header X-Forwarded-Proto http
     default_backend ejmpa-backend
 
-frontend www-https
-    bind *:443 ssl crt /etc/letsencrypt/live/www.ejmpa.tech.pem
+frontend www
+    bind *:443 ssl crt /etc/letsencrypt/live/www.ejmpa.tech/fullchain.pem
     http-request set-header X-Forwarded-Proto https
     http-response set-header X-Served-By %[hostname]
-    acl is_root path -m beg /
-    http-response set-var(txn.root_page) str(Holberton School) if is_root
-    http-response replace-value Content-Length \d+ .* %[var(txn.root_page)] if is_root
     default_backend ejmpa-backend
 
 backend ejmpa-backend
