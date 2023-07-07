@@ -1,52 +1,46 @@
 global
-11;rgb:0000/0000/0000log /dev/log local0
-    log /dev/log local1 notice
-    chroot /var/lib/haproxy
-    stats socket /run/haproxy/admin.sock mode 660 level admin
-    stats timeout 30s
+	log /dev/log	local0
+	log /dev/log	local1 notice
+	chroot /var/lib/haproxy
+	stats socket /run/haproxy/admin.sock mode 660 level admin
+	stats timeout 30s
     maxconn 4096
-    user haproxy
-    group haproxy
-    daemon
+	user haproxy
+	group haproxy
+	daemon
 
-    # Default SSL material locations
-    ca-base /etc/ssl/certs
-    crt-base /etc/ssl/private
-
-    # SSL configuration
-    ssl-default-bind-ciphers ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384
-    ssl-default-bind-ciphersuites TLS_AES_128_GCM_SHA256:TLS_AES_256_GCM_SHA384:TLS_CHACHA20_POLY1305_SHA256
-    ssl-default-bind-options ssl-min-ver TLSv1.2 no-tls-tickets
+	# Default SSL material locations
+	ca-base /etc/ssl/certs
+	crt-base /etc/ssl/private
 
 defaults
-    log global
-    mode http
-    option httplog
-    option dontlognull
+	log	global
+	mode	http
+	option	httplog
+	option	dontlognull
     timeout connect 5000
-    timeout client 50000
-    timeout server 50000
-    errorfile 400 /etc/haproxy/errors/400.http
-    errorfile 403 /etc/haproxy/errors/403.http
-    errorfile 408 /etc/haproxy/errors/408.http
-    errorfile 500 /etc/haproxy/errors/500.http
-    errorfile 502 /etc/haproxy/errors/502.http
-    errorfile 503 /etc/haproxy/errors/503.http
-    errorfile 504 /etc/haproxy/errors/504.http
+    timeout client  50000
+    timeout server  50000
+	errorfile 400 /etc/haproxy/errors/400.http
+	errorfile 403 /etc/haproxy/errors/403.http
+	errorfile 408 /etc/haproxy/errors/408.http
+	errorfile 500 /etc/haproxy/errors/500.http
+	errorfile 502 /etc/haproxy/errors/502.http
+	errorfile 503 /etc/haproxy/errors/503.http
+	errorfile 504 /etc/haproxy/errors/504.http
 
-frontend stats
+frontend  stats
     bind *:80
     mode http
-    http-request set-header X-Forwarded-Proto http
-    default_backend ejmpa-backend
+	http-request set-header X-Forwarded-Proto http
+    default_backend backend
 
-frontend www
-    bind *:443 ssl crt /etc/letsencrypt/live/www.ejmpa.tech/fullchain.pem
-    http-request set-header X-Forwarded-Proto https
-    http-response set-header X-Served-By %[hostname]
-    default_backend ejmpa-backend
+frontend http
+	bind *:443 ssl crt /etc/haproxy/certs/www.holberton.online.pem
+	http-request set-header X-Forwarded-Proto https
+	default_backend backend
 
-backend ejmpa-backend
-    balance roundrobin
-    server 212133-web-01 100.25.133.51:80 check
-    server 212133-web-02 3.83.227.219:80 check
+backend backend
+        balance roundrobin
+        server 212133-web-01 100.25.133.51:80 check
+        server 212133-web-02 3.83.227.219:80 check
