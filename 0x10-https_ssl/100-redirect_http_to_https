@@ -1,0 +1,49 @@
+global
+    log /dev/log local0
+    log /dev/log local1 notice
+    chroot /var/lib/haproxy
+    stats socket /run/haproxy/admin.sock mode 660 level admin
+    stats timeout 30s
+    user haproxy
+    group haproxy
+    daemon
+
+defaults
+    log global
+    mode http
+    option httplog
+    option dontlognull
+    timeout connect 5000
+    timeout client 50000
+    timeout server 50000
+    errorfile 400 /etc/haproxy/errors/400.http
+    errorfile 403 /etc/haproxy/errors/403.http
+    errorfile 408 /etc/haproxy/errors/408.http
+    errorfile 500 /etc/haproxy/errors/500.http
+    errorfile 502 /etc/haproxy/errors/502.http
+    errorfile 503 /etc/haproxy/errors/503.http
+    errorfile 504 /etc/haproxy/errors/504.http
+
+frontend ejmpa
+   bind *:80
+   stats uri /haproxy?stats
+   default_backend ejmpa-backend
+
+frontend ejmpa-frontend
+    bind *:443 ssl crt /etc/letsencrypt/live/www.ejmpa.tech/ssl_cert.pem
+    mode http
+    http-request set-header X-Forwarded-Proto https
+    http-request redirect scheme https code 301 if !{ ssl_fc }
+    default_backend ejmpa-backend
+
+backend ejmpa-backend
+    balance roundrobin
+    server 212133-web-01 100.25.133.51:80 check
+    server 212133-web-02 3.83.227.219:80 check
+
+listen stats
+   bind *:8080
+   stats enable
+   stats uri /
+   stats refresh 5s
+   stats realm Haproxy\ Statistics
