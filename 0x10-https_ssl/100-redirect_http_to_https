@@ -27,13 +27,13 @@ defaults
 frontend ejmpa
    bind *:80
    stats uri /haproxy?stats
+   http-request redirect scheme https code 301 if !{ ssl_fc }
    default_backend ejmpa-backend
 
 frontend ejmpa-frontend
     bind *:443 ssl crt /etc/letsencrypt/live/www.ejmpa.tech/ssl_cert.pem
     mode http
     http-request set-header X-Forwarded-Proto https
-    http-request redirect scheme https code 301 if !{ ssl_fc }
     default_backend ejmpa-backend
 
 backend ejmpa-backend
