@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+# This script configures Nginx to run as the nginx user and listen on all active IPs on port 8080.
+
+# Check if Nginx is installed
+if ! command -v nginx &>/dev/null; then
+  echo "Nginx is not installed. Please install Nginx first."
+  exit 1
+fi
+
+# Stop Nginx to make the necessary configuration changes
+systemctl stop nginx
+
+# Change the user running Nginx to 'nginx'
+sed -i 's/^user .*$/user nginx;/' /etc/nginx/nginx.conf
+
+# Update the listen directive to listen on all active IPs on port 8080
+sed -i 's/^listen .*$/listen 8080;/' /etc/nginx/sites-available/default
+
+# give owner permissions to read and write to the config file
+chmod 644 /etc/nginx/nginx.conf
+
+# Start Nginx after the configuration changes
+systemctl start nginx
