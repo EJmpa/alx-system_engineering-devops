@@ -31,7 +31,8 @@ def display_todo_progress(employee_data):
     done_tasks = sum(1 for todo in todos if todo['completed'])
     task_titles = [todo['title'] for todo in todos if todo['completed']]
 
-    print(f"Employee {employee_name} is done with tasks({done_tasks}/{total_tasks}):")
+    print(f"Employee {employee_name} is done \
+    with tasks({done_tasks}/{total_tasks}):")
     for title in task_titles:
         print("\t", title)
 
