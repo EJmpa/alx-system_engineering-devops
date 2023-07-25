@@ -4,37 +4,56 @@
 import sys
 import requests
 
+
 def fetch_employee_todo_list(employee_id):
+    """
+    Fetches employee data and TODO list from the REST API.
+
+    Args:
+        employee_id (int): The ID of the employee.
+
+    Returns:
+        tuple: A tuple containing employee data (dict)
+        and a list of TODOs (list).
+    """
     base_url = "https://jsonplaceholder.typicode.com"
-    endpoint = f"/users/{employee_id}"
-    url = base_url + endpoint
+    employee_url = f"{base_url}/users/{employee_id}"
+    todo_url = f"{base_url}/todos?userId={employee_id}"
 
-    response = requests.get(url)
-    if response.status_code == 200:
-        return response.json()
-    else:
-        return None
+    try:
+        response_employee = requests.get(employee_url)
+        response_todo = requests.get(todo_url)
+        response_employee.raise_for_status()
+        response_todo.raise_for_status()
 
-def display_todo_progress(employee_data):
-    if not employee_data:
-        print("Employee not found.")
-        return
+        employee_data = response_employee.json()
+        todos = response_todo.json()
 
+        return employee_data, todos
+
+    except requests.exceptions.HTTPError as err:
+        print(f"Error: {err}")
+        sys.exit(1)
+
+
+def display_todo_progress(employee_data, todos):
+    """
+    Displays the employee TODO list progress.
+
+    Args:
+        employee_data (dict): Data of the employee.
+        todos (list): List of TODOs.
+    """
     employee_name = employee_data['name']
-    todos = fetch_employee_todo_list(employee_data['id'])
-
-    if not todos:
-        print("TODO list not found for the employee.")
-        return
-
     total_tasks = len(todos)
     done_tasks = sum(1 for todo in todos if todo['completed'])
     task_titles = [todo['title'] for todo in todos if todo['completed']]
 
-    print(f"Employee {employee_name} is done \
-    with tasks({done_tasks}/{total_tasks}):")
+    print(f"Employee {employee_name} is done "
+          f"with tasks({done_tasks}/{total_tasks}):")
     for title in task_titles:
         print("\t", title)
+
 
 if __name__ == "__main__":
     if len(sys.argv) != 2 or not sys.argv[1].isdigit():
@@ -42,5 +61,5 @@ if __name__ == "__main__":
         sys.exit(1)
 
     employee_id = int(sys.argv[1])
-    employee_data = fetch_employee_todo_list(employee_id)
-    display_todo_progress(employee_data)
+    employee_data, todos = fetch_employee_todo_list(employee_id)
+    display_todo_progress(employee_data, todos)
