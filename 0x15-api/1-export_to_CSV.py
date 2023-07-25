@@ -2,8 +2,8 @@
 """Accessing a REST API for todo lists of employees"""
 
 import csv
-import sys
 import requests
+import sys
 
 
 def fetch_employee_todo_list(employee_id):
