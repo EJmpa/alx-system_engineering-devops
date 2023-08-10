@@ -7,14 +7,16 @@ occurrences of keywords in hot article titles.
 import requests
 
 
-def count_words(subreddit, word_list):
+def count_words(subreddit, word_list, after=None, count_dict=None):
     """
-    Recursively queries the Reddit API, parses the titles of all
-    hot articles, and prints a sorted count of given keywords.
+    Recursively queries the Reddit API, parses the titles of all hot
+    articles, and prints a sorted count of given keywords.
 
     Args:
         subreddit (str): The name of the subreddit.
         word_list (list): List of keywords to count.
+        after (str): Token for pagination.
+        count_dict (dict): Dictionary to store keyword counts.
 
     Returns:
         None
@@ -22,7 +24,11 @@ def count_words(subreddit, word_list):
     if not subreddit:
         return
 
-    url = f"https://www.reddit.com/r/{subreddit}/hot.json?limit=100"
+    if count_dict is None:
+        count_dict = {}
+
+    url = (f"https://www.reddit.com/r/"
+           f"{subreddit}/hot.json?limit=100&after={after}")
     headers = {"User-Agent": "MySubredditKeywordCounter/1.0"}
 
     response = requests.get(url, headers=headers, allow_redirects=False)
@@ -32,18 +38,17 @@ def count_words(subreddit, word_list):
         posts = data["data"]["children"]
 
         if posts:
-            count_dict = {}
-
             for post in posts:
                 title = post["data"]["title"].lower()
-                for keyword in word_list:
-                    if keyword in title:
+                for keyword in word_list.split():
+                    if keyword.lower() in title:
                         count_dict[keyword] = count_dict.get(keyword, 0) + 1
 
             after = data["data"]["after"]
 
             if after is not None:
-                return count_words(subreddit, word_list)
+                word_list = word_list.split()
+                return count_words(subreddit, word_list, after, count_dict)
             else:
                 sorted_counts = sorted(count_dict.items(),
                                        key=lambda x: (-x[1], x[0]))
