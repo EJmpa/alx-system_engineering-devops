@@ -11,13 +11,13 @@ file { '/etc/apache2/conf.d':
   mode   => '0755',
 }
 
-# Add the missing configuration file
-file { '/etc/apache2/conf.d/myconfig.conf':
+# Add the missing configuration file for custom PHP module
+file { '/etc/apache2/conf.d/mod_custom_php.conf':
   ensure  => 'present',
   owner   => 'root',
   group   => 'root',
   mode    => '0644',
-  content => "Your configuration content here\n",
+  content => "# Load custom PHP module\nLoadModule custom_php_module /usr/lib/apache2/modules/mod_custom_php.so\n\n<IfModule custom_php_module>\n,
   require => File['/etc/apache2/conf.d'],
 }
 
@@ -31,5 +31,5 @@ service { 'apache2':
 service { 'apache2':
   ensure => 'running',
   enable => true,
-  require => File['/etc/apache2/conf.d/myconfig.conf'],
+  require => File['/etc/apache2/conf.d/mod_custom_php.conf'],
 }
